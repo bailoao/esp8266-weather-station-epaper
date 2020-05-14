@@ -29,18 +29,27 @@ TimeClient::TimeClient(float utcOffset, const char * Serverurl) {
   myUtcOffset = utcOffset;
   server=Serverurl;
 }
-
+void TimeClient::updateTime(String line)
+{
+   if (line.startsWith("DATE: ")) {
+    int parsedHours = line.substring(23, 25).toInt();
+        int parsedMinutes = line.substring(26, 28).toInt();
+        int parsedSeconds = line.substring(29, 31).toInt();
+        localEpoc = (parsedHours * 60 * 60 + parsedMinutes * 60 + parsedSeconds);
+        Serial.println(String(parsedHours) + ":" + String(parsedMinutes) + ":" + String(parsedSeconds));
+   }
+  }
 void TimeClient::updateTime() {
   WiFiClient client;
   const int httpPort = 80;
-  Serial.println("updating time");
+  Serial.println("Updating time...");
 
 if (!client.connect(server, 80)) {
-    Serial.println("connection failed");
+    Serial.println("Connection failed");
     return;
   }
 
-  Serial.print("Requesting URL: ");
+  Serial.println("Requesting URL:/time.php");
 
   // This will send the request to the server
   client.print(String("GET /time.php")+ " HTTP/1.1\r\n" +
@@ -50,7 +59,7 @@ if (!client.connect(server, 80)) {
 
   
   /*if (!client.connect("duckduckweather.esy.es",80)) {
-    Serial.println("connection failed");
+    ////Serial.println("connection failed");
     return;
   }
   
@@ -61,7 +70,7 @@ if (!client.connect(server, 80)) {
   int repeatCounter = 0;
   while(!client.available() && repeatCounter < 100) {
     delay(500); 
-    Serial.println(".");
+    ////Serial.println(".");
     repeatCounter++;
   }*/
 
@@ -69,24 +78,26 @@ if (!client.connect(server, 80)) {
   int size = 0;
   client.setNoDelay(false);
   while(client.connected()) {
-   Serial.println("time server connected");
-   Serial.println(client.available());
+   Serial.println("Time server connected");
+   //Serial.println(client.available());
+    delay(200);
     while((size = client.available()) > 0) {
-  
+      delay(20);
        
-      line = client.readStringUntil('\n');Serial.println(line);
+      line = client.readStringUntil('\n');
+      //Serial.println(line);
       line.toUpperCase(); 
       // example: 
       // date: Thu, 19 Nov 2015 20:25:40 GMT
       if (line.startsWith("DATE: ")) {
-        Serial.println(line.substring(23, 25) + ":" + line.substring(26, 28) + ":" +line.substring(29, 31));
+        ////Serial.println(line.substring(23, 25) + ":" + line.substring(26, 28) + ":" +line.substring(29, 31));
         int parsedHours = line.substring(23, 25).toInt();
         int parsedMinutes = line.substring(26, 28).toInt();
         int parsedSeconds = line.substring(29, 31).toInt();
         Serial.println(String(parsedHours) + ":" + String(parsedMinutes) + ":" + String(parsedSeconds));
 
         localEpoc = (parsedHours * 60 * 60 + parsedMinutes * 60 + parsedSeconds);
-        Serial.println(localEpoc);
+        Serial.printf("localEpoc:%d\n",localEpoc);
         localMillisAtUpdate = millis();
       }
     }
@@ -127,9 +138,34 @@ String TimeClient::getSeconds() {
     }
     return String(seconds);
 }
+byte TimeClient::getHours_byte()
+{
+   if (localEpoc == 0) {
+      return 0;
+    }
+    int hours = ((getCurrentEpochWithUtcOffset()  % 86400L) / 3600) % 24;
+    return (byte) hours;
+  }
+byte TimeClient::getMinutes_byte()
+{
+   if (localEpoc == 0) {
+      return 0;
+    }
+    int minutes = ((getCurrentEpochWithUtcOffset() % 3600) / 60);
+    return (byte)minutes;
+  
+  }
 
+byte TimeClient::TimeClient::getSeconds_byte() {
+    if (localEpoc == 0) {
+      return 0;
+    }
+    int seconds = getCurrentEpochWithUtcOffset() % 60;
+    
+    return byte(seconds);
+}
 String TimeClient::getFormattedTime() {
-  return getHours() + ":" + getMinutes() + ":" + getSeconds();
+  return getHours() + ":" + getMinutes();
 }
 
 long TimeClient::getCurrentEpoch() {
@@ -137,5 +173,5 @@ long TimeClient::getCurrentEpoch() {
 }
 
 long TimeClient::getCurrentEpochWithUtcOffset() {
-  return long(round(getCurrentEpoch() + 3600 * myUtcOffset + 86400L)) % 86400L;
+  return long(round(getCurrentEpoch() + 3600 * long(myUtcOffset) + 86400L) )% 86400L;
 }

@@ -3,42 +3,42 @@
 
 
 void heweatherListener::whitespace(char c) {
-  Serial.println("whitespace");
+  ////Serial.println("whitespace");
 }
 
 void heweatherListener::startDocument() {
-  Serial.println("start document");
+  ////Serial.println("start document");
 }
 
 void heweatherListener::key(String key) {
    
   
-  Serial.println("key: " + key);
+  ////Serial.println("key: " + key);
 }
 
 void heweatherListener::value(String value) {
  
   
-  Serial.println("value: " + value);
+  ////Serial.println("value: " + value);
 }
 
 void heweatherListener::endArray() {
-  Serial.println("end array. ");
+  ////Serial.println("end array. ");
 }
 
 void heweatherListener::endObject() {
-  Serial.println("end object. ");
+  ////Serial.println("end object. ");
 }
 
 void heweatherListener::endDocument() {
-  Serial.println("end document. ");
+  ////Serial.println("end document. ");
 }
 
 void heweatherListener::startArray() {
-   Serial.println("start array. ");
+   ////Serial.println("start array. ");
 }
 
 void heweatherListener::startObject() {
-   Serial.println("start object. ");
+   ////Serial.println("start object. ");
 }
 

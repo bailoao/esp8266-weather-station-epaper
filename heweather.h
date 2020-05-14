@@ -18,8 +18,10 @@ private:
  String currentParent;
  const char* server;
  const char* lang;
+
  public: 
    heweatherclient(const char * Serverurl,const char* langstring);
+   unsigned char* EPDbuffer;
    String aqi; String co; String no2; String o3;
    String pm10; String pm25; String so2; String aqitext;
    byte airconditionbits_index;
@@ -51,6 +53,9 @@ private:
  String tomorrow_txt_d;
  String tomorrow_txt_n;
  String message;
+ String year;
+ String nongli;
+ String t;
  
    String thedayaftertomorrow_cond_d;
    String thedayaftertomorrow_cond_d_index;
@@ -92,4 +97,3 @@ virtual void whitespace(char c);
  
   
     
-

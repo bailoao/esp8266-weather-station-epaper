@@ -64,17 +64,17 @@ byte heweatherclient::getMeteoconIcon(int weathercodeindex) {
 }
 
 void heweatherclient::whitespace(char c) {
- // Serial.println("whitespace");
+  ////Serial.println("whitespace");
 }
 
 void heweatherclient::startDocument() {
-  //Serial.println("start document");
+  ////Serial.println("start document");
 }
 
 void heweatherclient::key(String key) {
    currentKey=key;
   
- // Serial.println("key: " + key);
+  //Serial.println("key: " + key);
 }
 
 void heweatherclient::value(String value) {
@@ -145,29 +145,32 @@ if(currentParent=="thedayaftertomorrow")
  if(currentKey=="city") citystr=value;
  if(currentKey=="date") date=value;
    if(currentKey=="qlty") qlty=value;
-   if(currentKey="message") message=value;
+   if(currentKey=="message") message=value;
+   if(currentKey=="year") year=value;
+   if(currentKey=="nongli") nongli=value;
+   if(currentKey=="t") t=value;
   //Serial.println("value: " + value);
 }
 
 void heweatherclient::endArray() {
-  //Serial.println("end array. ");
+  ////Serial.println("end array. ");
 }
 
 void heweatherclient::endObject() {
- // Serial.println("end object. ");
+  ////Serial.println("end object. ");
   currentParent="";
 }
 
 void heweatherclient::endDocument() {
-  //Serial.println("end document. ");
+  ////Serial.println("end document. ");
 }
 
 void heweatherclient::startArray() {
-  // Serial.println("start array. ");
+   ////Serial.println("start array. ");
 }
 
 void heweatherclient::startObject() {
-  // Serial.println("start object. ");
+   ////Serial.println("start object. ");
      currentParent = currentKey;
 }
 void heweatherclient::update()
@@ -177,15 +180,16 @@ void heweatherclient::update()
   parser.setListener(this);
   WiFiClient client;
   const int httpPort =80;
+  Serial.println("Updating weather data...");
  if (!client.connect(server, 80)) {
-    Serial.println("connection failed");
+    Serial.println("Connection failed");
     return;
   }
 
-  Serial.print("Requesting URL: ");
+  Serial.println("Requesting URL: ");
 
   // This will send the request to the server
-  client.print(String("GET /weather.php?city=")+city +"&lang="+lang+"&client_name="+client_name+" HTTP/1.1\r\n" +
+  client.print(String("GET /weather.php?city=")+city+"&lang="+lang+"&client_name="+client_name+" HTTP/1.1\r\n" +
              "Host: " + server + "\r\n" +
              "Connection: close\r\n" +
              "\r\n" );
@@ -196,13 +200,14 @@ void heweatherclient::update()
   char c;
 
   int size = 0;
+  
   client.setNoDelay(false);
   while(client.connected()) {
-     Serial.println(client.available());
-     delay(500);
+  Serial.println("Weather page connected");
+     delay(200);    
     while(client.available()) {
       c = client.read();
-      Serial.print(c);
+      //Serial.print(c);
       if (c == '{' || c == '[') {
         isBody = true;
       }
@@ -210,4 +215,6 @@ void heweatherclient::update()
         parser.parse(c);
       }
     }
-  } }
+  } 
+  Serial.printf("Recieved %d bytes of data\n",pos);
+  }
