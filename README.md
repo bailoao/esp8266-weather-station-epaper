@@ -1,7 +1,14 @@
 # Esp8266-weather-station-epaper
 中文版说明在这里http://mxlu.com/2017/07/06/esp8266%E7%94%B5%E7%BA%B8%E5%B1%8F%E5%A4%A9%E6%B0%94%E9%A2%84%E6%8A%A5%E7%AB%99/
+最新版https://oshwhub.com/duck/esp8266-weather-station-epaper
 
 ## Changelog
+2020-5-14
+please check the online version of pcb 
+https://oshwhub.com/duck/esp8266-weather-station-epaper
+explanations below maybe out dated
+
+
 2015/5/28
 1.change voltage divder resistor form 1M and 300K to 300K and 100K.（R6,R7）
 2.change the equation for battery voltage caculation
